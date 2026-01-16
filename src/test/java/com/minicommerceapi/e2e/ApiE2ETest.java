@@ -105,7 +105,7 @@ class ApiE2ETest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> patchReq = new HttpEntity<>("{"rating":5,"comment":"cok iyi"}", headers);
+        HttpEntity<String> patchReq = new HttpEntity<>("{\"rating\":5,\"comment\":\"cok iyi\"}", headers);
 
         ResponseEntity<ReviewDtos.ReviewResponse> patched = rest.exchange("/api/reviews/" + reviewId,
                 HttpMethod.PATCH, patchReq, ReviewDtos.ReviewResponse.class);
@@ -136,7 +136,7 @@ class ApiE2ETest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> patchReq = new HttpEntity<>("{"status":"PAID"}", headers);
+        HttpEntity<String> patchReq = new HttpEntity<>("{\"status\":\"PAID\"}", headers);
 
         ResponseEntity<OrderDtos.OrderResponse> patched = rest.exchange("/api/orders/" + order.id(),
                 HttpMethod.PATCH, patchReq, OrderDtos.OrderResponse.class);
@@ -151,7 +151,7 @@ class ApiE2ETest {
     void scenario_validationError_returns400() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> req = new HttpEntity<>("{"name":"","email":"yanlis"}", headers);
+        HttpEntity<String> req = new HttpEntity<>("{\"name\":\"\",\"email\":\"yanlis\"}", headers);
 
         ResponseEntity<Map> res = rest.postForEntity("/api/users", req, Map.class);
         assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
