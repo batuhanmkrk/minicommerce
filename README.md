@@ -1,113 +1,96 @@
-# MiniCommerce API (Spring Boot)
+# minicommerceAPI
 
-![CI](https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>/branch/main/graph/badge.svg)](https://codecov.io/gh/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>)
+![CI](https://github.com/batuhanmkrk/minicommerce/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/batuhanmkrk/minicommerce/branch/main/graph/badge.svg)](https://codecov.io/gh/batuhanmkrk/minicommerce)
 
-A small REST API used for Software Quality Assurance & Testing assignments.
+Mini bir e-ticaret senaryosu icin gelistirilmis REST API. Projede esas odak, duzgun katman ayrimi (service/repository),
+dogru HTTP kodlari, OpenAPI 3 dokumantasyonu ve testlerle (unit + integration + e2e) davranisin dogrulanmasidir.
 
-## Tech stack
-- Java 17
-- Spring Boot 3.5.9
-- Spring Web + Validation + Spring Data JPA
-- H2 database
-- Swagger UI via springdoc-openapi
+## Tech Stack
+- Java 17, Spring Boot
+- Spring Web, Validation
+- Spring Data JPA (Hibernate)
+- Database: SQLite (file-based)
+- OpenAPI 3.0+: springdoc-openapi + Swagger UI
+- Tests: JUnit 5, Mockito, Spring Boot Test, MockMvc, TestRestTemplate
+- Coverage: JaCoCo
+- CI: GitHub Actions
 
-## Run
-```bash
-mvn spring-boot:run
-```
+## Setup
+Requirements:
+- Java 17+
+- Maven 3+
 
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- OpenAPI JSON: http://localhost:8080/v3/api-docs
-- H2 console: http://localhost:8080/h2-console  
-  JDBC URL (dev): `jdbc:h2:file:./data/minicommerce`
-
-## Test
+Run tests:
 ```bash
 mvn test
 ```
 
-### Coverage
-JaCoCo report:
-- `target/site/jacoco/index.html`
+Run the application:
+```bash
+mvn spring-boot:run
+```
 
-## API
+Database file (dev):
+- `./data/minicommerce.db`
+
+## Swagger / OpenAPI
+- Swagger UI: http://localhost:8080/api-docs
+- OpenAPI JSON: http://localhost:8080/api-docs-json
+
+## API Resources
 Base path: `/api`
+- Users: `/users`
+- Categories: `/categories`
+- Products: `/products`
+- Orders: `/orders`
+- Reviews: `/reviews`
 
-Resources:
-- `/users`
-- `/categories`
-- `/products`
-- `/orders` (PATCH: status)
-- `/reviews` (PATCH: rating/comment)
+## Ornek istekler (curl)
 
-Category deletion rule:
-- `DELETE /api/categories/{id}` returns **409 Conflict** if the category still has products.
-
-## Docker + PostgreSQL (optional)
-If you want to run the API against PostgreSQL:
-
+### Kullanici olustur
 ```bash
-docker compose up -d
-mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+curl -s -X POST http://localhost:8080/api/users       -H "Content-Type: application/json"       -d '{"name":"Ayse Yilmaz","email":"ayse@ornek.com"}'
 ```
 
-- DB: `postgres://minicommerce:minicommerce@localhost:5432/minicommerce`
-
-## Usage examples (curl)
-
-### Create a user
+### Kategori olustur
 ```bash
-curl -s -X POST http://localhost:8080/api/users \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Alice","email":"alice@example.com"}'
+curl -s -X POST http://localhost:8080/api/categories       -H "Content-Type: application/json"       -d '{"name":"Giyim"}'
 ```
 
-### Create a category
+### Urun olustur
 ```bash
-curl -s -X POST http://localhost:8080/api/categories \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Clothing"}'
+curl -s -X POST http://localhost:8080/api/products       -H "Content-Type: application/json"       -d '{"name":"Mont","sku":"SKU-TR-1","price":999.90,"stock":10,"categoryId":1}'
 ```
 
-### Create a product
+### Urun guncelle (PATCH)
 ```bash
-curl -s -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Jacket","sku":"SKU-1","price":99.90,"stock":10,"categoryId":1}'
+curl -s -X PATCH http://localhost:8080/api/products/1       -H "Content-Type: application/json"       -d '{"price":899.90,"stock":8}'
 ```
 
-### Patch product
+### Siparis olustur
 ```bash
-curl -s -X PATCH http://localhost:8080/api/products/1 \
-  -H "Content-Type: application/json" \
-  -d '{"price":89.90,"stock":8}'
+curl -s -X POST http://localhost:8080/api/orders       -H "Content-Type: application/json"       -d '{"userId":1,"items":[{"productId":1,"quantity":2}]}'
 ```
 
-### Create an order (decreases stock)
+### Siparis durum guncelle (PATCH)
 ```bash
-curl -s -X POST http://localhost:8080/api/orders \
-  -H "Content-Type: application/json" \
-  -d '{"userId":1,"items":[{"productId":1,"quantity":2}]}'
+curl -s -X PATCH http://localhost:8080/api/orders/1       -H "Content-Type: application/json"       -d '{"status":"PAID"}'
 ```
 
-### Update order status
+### Yorum olustur
 ```bash
-curl -s -X PATCH http://localhost:8080/api/orders/1 \
-  -H "Content-Type: application/json" \
-  -d '{"status":"PAID"}'
+curl -s -X POST http://localhost:8080/api/reviews       -H "Content-Type: application/json"       -d '{"userId":1,"productId":1,"rating":5,"comment":"Gayet iyi"}'
 ```
 
-### Create a review
+### Yorum guncelle (PATCH)
 ```bash
-curl -s -X POST http://localhost:8080/api/reviews \
-  -H "Content-Type: application/json" \
-  -d '{"userId":1,"productId":1,"rating":5,"comment":"Nice!"}'
+curl -s -X PATCH http://localhost:8080/api/reviews/1       -H "Content-Type: application/json"       -d '{"rating":4,"comment":"Hala iyi"}'
 ```
 
-### Patch a review
-```bash
-curl -s -X PATCH http://localhost:8080/api/reviews/1 \
-  -H "Content-Type: application/json" \
-  -d '{"rating":4,"comment":"Still good"}'
-```
+## Coverage
+- JaCoCo report: `target/site/jacoco/index.html`
+
+## Notes
+- Tum endpoint'ler Swagger UI uzerinden goruntulenebilir ve request/response semalari OpenAPI 3 ile dokumante edilir.
+- Testler, basarili senaryolarin yaninda validation / not-found / conflict gibi hata durumlarini da kapsar.
