@@ -105,6 +105,7 @@ class ApiE2ETest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         HttpEntity<String> patchReq = new HttpEntity<>("{\"rating\":5,\"comment\":\"cok iyi\"}", headers);
 
         ResponseEntity<ReviewDtos.ReviewResponse> patched = rest.exchange("/api/reviews/" + reviewId,
@@ -136,6 +137,7 @@ class ApiE2ETest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         HttpEntity<String> patchReq = new HttpEntity<>("{\"status\":\"PAID\"}", headers);
 
         ResponseEntity<OrderDtos.OrderResponse> patched = rest.exchange("/api/orders/" + order.id(),
@@ -146,11 +148,11 @@ class ApiE2ETest {
         assertEquals("PAID", patched.getBody().status());
     }
 
-    // Kucuk bir yardimci: validation hatasi icin basit bir ornek.
     @Test
     void scenario_validationError_returns400() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         HttpEntity<String> req = new HttpEntity<>("{\"name\":\"\",\"email\":\"yanlis\"}", headers);
 
         ResponseEntity<Map> res = rest.postForEntity("/api/users", req, Map.class);
