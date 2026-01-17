@@ -36,6 +36,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-webmvc-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+	testImplementation("org.springframework.boot:spring-boot-test-autoconfigure")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
