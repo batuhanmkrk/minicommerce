@@ -7,6 +7,7 @@ Mini bir e-ticaret senaryosu icin gelistirilmis REST API. Projede esas odak, duz
 dogru HTTP kodlari, OpenAPI 3 dokumantasyonu ve testlerle (unit + integration + e2e) davranisin dogrulanmasidir.
 
 ## Tech Stack
+
 - Java 17, Spring Boot
 - Spring Web, Validation
 - Spring Data JPA (Hibernate)
@@ -17,29 +18,37 @@ dogru HTTP kodlari, OpenAPI 3 dokumantasyonu ve testlerle (unit + integration + 
 - CI: GitHub Actions
 
 ## Setup
+
 Requirements:
+
 - Java 17+
-- Maven 3+
+- Gradle 9+
 
 Run tests:
+
 ```bash
-mvn test
+./gradlew test
 ```
 
 Run the application:
+
 ```bash
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
 Database file (dev):
-- `./data/minicommerce.db`
 
-## Swagger / OpenAPI
-- Swagger UI: http://localhost:8080/api-docs
-- OpenAPI JSON: http://localhost:8080/api-docs-json
+- `./minicommerce.db`
+
+## Swagger / OpenAPI (dev)
+
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
 
 ## API Resources
+
 Base path: `/api`
+
 - Users: `/users`
 - Categories: `/categories`
 - Products: `/products`
@@ -49,48 +58,58 @@ Base path: `/api`
 ## Ornek istekler (curl)
 
 ### Kullanici olustur
+
 ```bash
-curl -s -X POST http://localhost:8080/api/users       -H "Content-Type: application/json"       -d '{"name":"Ayse Yilmaz","email":"ayse@ornek.com"}'
+curl -s -X POST http://localhost:8080/api/users -H "Content-Type: application/json" -d '{"name":"Ayse Yilmaz","email":"ayse@ornek.com"}'
 ```
 
 ### Kategori olustur
+
 ```bash
-curl -s -X POST http://localhost:8080/api/categories       -H "Content-Type: application/json"       -d '{"name":"Giyim"}'
+curl -s -X POST http://localhost:8080/api/categories -H "Content-Type: application/json" -d '{"name":"Giyim"}'
 ```
 
 ### Urun olustur
+
 ```bash
-curl -s -X POST http://localhost:8080/api/products       -H "Content-Type: application/json"       -d '{"name":"Mont","sku":"SKU-TR-1","price":999.90,"stock":10,"categoryId":1}'
+curl -s -X POST http://localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Mont","sku":"SKU-TR-1","price":999.90,"stock":10,"categoryId":1}'
 ```
 
 ### Urun guncelle (PATCH)
+
 ```bash
-curl -s -X PATCH http://localhost:8080/api/products/1       -H "Content-Type: application/json"       -d '{"price":899.90,"stock":8}'
+curl -s -X PATCH http://localhost:8080/api/products/1 -H "Content-Type: application/json" -d '{"price":899.90,"stock":8}'
 ```
 
 ### Siparis olustur
+
 ```bash
-curl -s -X POST http://localhost:8080/api/orders       -H "Content-Type: application/json"       -d '{"userId":1,"items":[{"productId":1,"quantity":2}]}'
+curl -s -X POST http://localhost:8080/api/orders -H "Content-Type: application/json" -d '{"userId":1,"items":[{"productId":1,"quantity":2}]}'
 ```
 
 ### Siparis durum guncelle (PATCH)
+
 ```bash
-curl -s -X PATCH http://localhost:8080/api/orders/1       -H "Content-Type: application/json"       -d '{"status":"PAID"}'
+curl -s -X PATCH http://localhost:8080/api/orders/1 -H "Content-Type: application/json" -d '{"status":"PAID"}'
 ```
 
 ### Yorum olustur
+
 ```bash
-curl -s -X POST http://localhost:8080/api/reviews       -H "Content-Type: application/json"       -d '{"userId":1,"productId":1,"rating":5,"comment":"Gayet iyi"}'
+curl -s -X POST http://localhost:8080/api/reviews -H "Content-Type: application/json" -d '{"userId":1,"productId":1,"rating":5,"comment":"Gayet iyi"}'
 ```
 
 ### Yorum guncelle (PATCH)
+
 ```bash
-curl -s -X PATCH http://localhost:8080/api/reviews/1       -H "Content-Type: application/json"       -d '{"rating":4,"comment":"Hala iyi"}'
+curl -s -X PATCH http://localhost:8080/api/reviews/1 -H "Content-Type: application/json" -d '{"rating":4,"comment":"Hala iyi"}'
 ```
 
 ## Coverage
+
 - JaCoCo report: `target/site/jacoco/index.html`
 
 ## Notes
+
 - Tum endpoint'ler Swagger UI uzerinden goruntulenebilir ve request/response semalari OpenAPI 3 ile dokumante edilir.
 - Testler, basarili senaryolarin yaninda validation / not-found / conflict gibi hata durumlarini da kapsar.
